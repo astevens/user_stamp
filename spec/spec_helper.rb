@@ -1,13 +1,3 @@
-require 'rubygems'
-
-gem 'rspec'
-require 'spec'
-
-%w[activesupport activerecord actionpack].each do |lib|
-  gem lib
-  require lib
-end
-
 require 'action_controller'
 require 'active_record/observer'
 

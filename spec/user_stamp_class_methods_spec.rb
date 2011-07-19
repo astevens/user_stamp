@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 class FauxModelBase
   def self.add_observer(observer_instance); end

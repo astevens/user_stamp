@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-class PostsController
+class CommentsController
   def self.current_user
     User.new(220)
   end
@@ -12,7 +12,7 @@ describe UserStampSweeper, "#before_validation" do
     UserStamp.updater_attribute   = :updater_id
     UserStamp.current_user_method = :current_user
     @sweeper = UserStampSweeper.instance
-    @sweeper.stub!(:controller).and_return(PostsController)
+    @sweeper.stub!(:controller).and_return(CommentsController)
   end
   
   describe "(with new record)" do
@@ -64,7 +64,7 @@ describe UserStampSweeper, "#before_validation (with custom attribute names)" do
     UserStamp.updater_attribute   = :updated_by
     UserStamp.current_user_method = :current_user
     @sweeper = UserStampSweeper.instance
-    @sweeper.stub!(:controller).and_return(PostsController)
+    @sweeper.stub!(:controller).and_return(CommentsController)
   end
   
   describe "(with new record)" do

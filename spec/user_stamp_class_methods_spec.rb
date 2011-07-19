@@ -8,7 +8,7 @@ class Post < FauxModelBase; end
 class Category < FauxModelBase; end
 class Label < FauxModelBase; end
 
-class FauxApplicationController  
+class FauxApplicationController
   def self.cache_sweeper(sweepers); end
   
   def self.current_user

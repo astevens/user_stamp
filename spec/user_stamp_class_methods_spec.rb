@@ -36,11 +36,24 @@ describe UserStamp::ClassMethods do
   end
   
   describe "#user_stamp" do
-    it "should add UserStampSweeper as observer for each model" do
-      [Post, Category, Label].each do |klass|
-        klass.should_receive(:add_observer).with(UserStampSweeper.instance).once
+    context 'in Rails 2' do
+      it "should add UserStampSweeper as observer for each model" do
+        Rails::VERSION.send(:remove_const, :STRING)
+        Rails::VERSION.const_set('STRING', '2')
+        [Post, Category, Label].each do |klass|
+          klass.should_receive(:add_observer).with(UserStampSweeper.instance).once
+        end
+        user_stamp
       end
-      user_stamp
+    end
+
+    context 'in Rails 3' do
+      it "should add UserStampSweeper as observer for each model" do
+        Rails::VERSION.send(:remove_const, :STRING)
+        Rails::VERSION.const_set('STRING', '3')
+        UserStampSweeper.should_receive(:observe).with(Post, Category, Label).once
+        user_stamp
+      end
     end
     
     it "should setup cache sweeper for controller" do

@@ -13,3 +13,9 @@ class User
     @id = id
   end
 end
+
+class Rails
+  class VERSION
+    STRING = '2'
+  end
+end

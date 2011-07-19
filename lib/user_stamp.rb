@@ -13,13 +13,17 @@ module UserStamp
   
   module ClassMethods
     def user_stamp(*models)
-      models.each { |klass| klass.add_observer(UserStampSweeper.instance) }
-      
-      class_eval do
-        cache_sweeper :user_stamp_sweeper
+      if Rails::VERSION::STRING[0] == '3'
+        UserStampSweeper.class_eval { observe *models }
+      elsif Rails::VERSION::STRING[0] == '2'
+        models.each { |klass| klass.add_observer(UserStampSweeper.instance) }
+      else
+        raise "UserStamp: Unsupported rails version"
       end
+      class_eval { cache_sweeper :user_stamp_sweeper }
     end
   end
+
 end
 
 UserStamp.creator_attribute   = :creator_id

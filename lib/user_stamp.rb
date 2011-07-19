@@ -46,3 +46,7 @@ class UserStampSweeper < ActionController::Caching::Sweeper
       end
     end
 end
+
+class ActionController::Base
+  extend UserStamp::ClassMethods
+end

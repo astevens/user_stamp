@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
 
   s.files             = %w( README Rakefile MIT-LICENSE )
   s.files            += Dir.glob("lib/**/*")
-  s.files            += Dir.glob("rails/**/*")
   s.files            += Dir.glob("spec/**/*")
 
   s.description       = <<desc

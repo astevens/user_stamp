@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/jnunemaker/user_stamp'
   s.email             = 'jnunemaker@gmail.com'
   s.authors           = [ 'John Nunemaker' ]
-  s.has_rdoc          = false
 
   s.files             = %w( README Rakefile MIT-LICENSE )
   s.files            += Dir.glob("lib/**/*")

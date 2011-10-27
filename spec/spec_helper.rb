@@ -16,6 +16,6 @@ end
 
 class Rails
   class VERSION
-    STRING = '2'
+    STRING = "2.3.11"
   end
 end

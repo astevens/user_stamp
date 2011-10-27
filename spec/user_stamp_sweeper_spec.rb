@@ -17,7 +17,7 @@ describe UserStampSweeper, "#before_validation" do
   
   describe "(with new record)" do
     it "should set creator_id if attribute exists" do
-      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => true)
+      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => true, :changed? => true)
       record.should_receive(:creator_id=).with(220).once
       @sweeper.before_validation(record)
     end
@@ -32,20 +32,20 @@ describe UserStampSweeper, "#before_validation" do
   
   describe "(with non new record)" do
     it "should NOT set creator_id if attribute exists" do
-      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => false)
+      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => false, :changed? => true)
       record.should_not_receive(:creator_id=)
       @sweeper.before_validation(record)
     end
     
     it "should NOT set creator_id if attribute does not exist" do
-      record = mock('Record', :updater_id= => nil, :new_record? => false)
+      record = mock('Record', :updater_id= => nil, :new_record? => false, :changed? => true)
       record.should_not_receive(:creator_id=)
       @sweeper.before_validation(record)
     end
   end
   
   it "should set updater_id if attribute exists" do
-    record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => :false)
+    record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => :false, :changed? => true)
     record.should_receive(:updater_id=)
     @sweeper.before_validation(record)
   end
@@ -69,7 +69,7 @@ describe UserStampSweeper, "#before_validation (with custom attribute names)" do
   
   describe "(with new record)" do
     it "should set created_by if attribute exists" do
-      record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => true)
+      record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => true, :changed? => true)
       record.should_receive(:created_by=).with(220).once
       @sweeper.before_validation(record)
     end
@@ -84,26 +84,32 @@ describe UserStampSweeper, "#before_validation (with custom attribute names)" do
   
   describe "(with non new record)" do
     it "should NOT set created_by if attribute exists" do
-      record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => false)
+      record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => false, :changed? => true)
       record.should_not_receive(:created_by=)
       @sweeper.before_validation(record)
     end
     
     it "should NOT set created_by if attribute does not exist" do
-      record = mock('Record', :updated_by= => nil, :new_record? => false)
+      record = mock('Record', :updated_by= => nil, :new_record? => false, :changed? => true)
       record.should_not_receive(:created_by=)
       @sweeper.before_validation(record)
     end
   end
   
   it "should set updated_by if attribute exists" do
-    record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => :false)
+    record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => :false, :changed? => true)
     record.should_receive(:updated_by=)
     @sweeper.before_validation(record)
   end
   
+  it "NOT set updated_by if record is unchanged" do
+    record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => :false, :changed? => false)
+    record.should_not_receive(:updated_by=)
+    @sweeper.before_validation(record)
+  end
+  
   it "should NOT set updated_by if attribute does not exist" do
-    record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => :false, :respond_to? => false)
+    record = mock('Record', :created_by= => nil, :updated_by= => nil, :new_record? => :false, :respond_to? => false, :changed? => true)
     record.should_receive(:respond_to?).with("updated_by=").and_return(false)
     record.should_not_receive(:updated_by=)
     @sweeper.before_validation(record)

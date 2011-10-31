@@ -13,9 +13,9 @@ module UserStamp
   
   module ClassMethods
     def user_stamp(*models)
-      if Rails::VERSION::STRING.first == '3'
+      if Rails::VERSION::STRING.first == '3' || Rails::VERSION::STRING[0] == '3'
         UserStampSweeper.class_eval { observe *models }
-      elsif Rails::VERSION::STRING.first == '2'
+      elsif Rails::VERSION::STRING.first == '2' || Rails::VERSION::STRING[0] == '2'
         models.each { |klass| klass.add_observer(UserStampSweeper.instance) }
       else
         raise "UserStamp: Unsupported rails version"
@@ -26,8 +26,8 @@ module UserStamp
 
 end
 
-UserStamp.creator_attribute   = :creator_id
-UserStamp.updater_attribute   = :updater_id
+UserStamp.creator_attribute   = :creator
+UserStamp.updater_attribute   = :updater
 UserStamp.current_user_method = :current_user
 
 class UserStampSweeper < ActionController::Caching::Sweeper
@@ -35,11 +35,11 @@ class UserStampSweeper < ActionController::Caching::Sweeper
     return unless current_user
     
     if record.respond_to?(UserStamp.creator_assignment_method) && record.new_record?
-      record.send(UserStamp.creator_assignment_method, current_user.id)
+      record.send(UserStamp.creator_assignment_method, current_user)
     end
     
     if record.respond_to?(UserStamp.updater_assignment_method) && record.changed?
-      record.send(UserStamp.updater_assignment_method, current_user.id)
+      record.send(UserStamp.updater_assignment_method, current_user)
     end
   end
   

@@ -1,70 +1,65 @@
 require 'spec_helper'
-
-class CommentsController
-  def self.current_user
-    User.new(220)
-  end
-end
-
-describe UserStampSweeper, "#before_validation" do
+describe UserStampSweeper, "#before_validation" do 
   before do
-    UserStamp.creator_attribute   = :creator_id
-    UserStamp.updater_attribute   = :updater_id
+    comments_controller = mock(:current_user => 220)
+    UserStamp.creator_attribute   = :creator
+    UserStamp.updater_attribute   = :updater
     UserStamp.current_user_method = :current_user
     @sweeper = UserStampSweeper.instance
-    @sweeper.stub!(:controller).and_return(CommentsController)
+    @sweeper.stub!(:controller).and_return(comments_controller)
   end
   
   describe "(with new record)" do
     it "should set creator_id if attribute exists" do
-      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => true, :changed? => true)
-      record.should_receive(:creator_id=).with(220).once
+      record = mock('Record', :creator= => nil, :updater= => nil, :new_record? => true, :changed? => true)
+      record.should_receive(:creator=).with(220).once
       @sweeper.before_validation(record)
     end
     
     it "should NOT set creator_id if attribute does not exist" do
-      record = mock('Record', :new_record? => true, :updater_id= => nil, :respond_to? => false)
-      record.should_receive(:respond_to?).with("creator_id=").and_return(false)
-      record.should_not_receive(:creator_id=)
+      record = mock('Record', :new_record? => true, :updater= => nil, :respond_to? => false)
+      record.should_receive(:respond_to?).with("creator=").and_return(false)
+      record.should_not_receive(:creator=)
       @sweeper.before_validation(record)
     end
   end
   
   describe "(with non new record)" do
     it "should NOT set creator_id if attribute exists" do
-      record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => false, :changed? => true)
-      record.should_not_receive(:creator_id=)
+      record = mock('Record', :creator_= => nil, :updater= => nil, :new_record? => false, :changed? => true)
+      record.should_not_receive(:creator=)
       @sweeper.before_validation(record)
     end
     
     it "should NOT set creator_id if attribute does not exist" do
-      record = mock('Record', :updater_id= => nil, :new_record? => false, :changed? => true)
-      record.should_not_receive(:creator_id=)
+      record = mock('Record', :updater= => nil, :new_record? => false, :changed? => true)
+      record.should_not_receive(:creator=)
       @sweeper.before_validation(record)
     end
   end
   
   it "should set updater_id if attribute exists" do
-    record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => :false, :changed? => true)
-    record.should_receive(:updater_id=)
+    record = mock('Record', :creator= => nil, :updater= => nil, :new_record? => :false, :changed? => true)
+    record.should_receive(:updater=)
     @sweeper.before_validation(record)
   end
   
   it "should NOT set updater_id if attribute does not exist" do
-    record = mock('Record', :creator_id= => nil, :updater_id= => nil, :new_record? => :false, :respond_to? => false)
-    record.should_receive(:respond_to?).with("updater_id=").and_return(false)
-    record.should_not_receive(:updater_id=)
+    record = mock('Record', :creator= => nil, :updater= => nil, :new_record? => :false, :respond_to? => false, :changed? => true)
+    record.should_receive(:respond_to?).with("updater=").and_return(false)
+    record.should_not_receive(:updater=)
     @sweeper.before_validation(record)
   end
 end
 
 describe UserStampSweeper, "#before_validation (with custom attribute names)" do
   before do
+    comments_controller = mock(:current_user => 220)
     UserStamp.creator_attribute   = :created_by
     UserStamp.updater_attribute   = :updated_by
     UserStamp.current_user_method = :current_user
     @sweeper = UserStampSweeper.instance
-    @sweeper.stub!(:controller).and_return(CommentsController)
+    @sweeper.stub!(:controller).and_return(comments_controller)
   end
   
   describe "(with new record)" do
